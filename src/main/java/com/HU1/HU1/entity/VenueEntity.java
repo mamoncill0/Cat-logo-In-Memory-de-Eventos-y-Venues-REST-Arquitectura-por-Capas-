@@ -1,6 +1,8 @@
 package com.HU1.HU1.entity;
 
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,16 +16,10 @@ import jakarta.persistence.Id;
 @AllArgsConstructor
 public class VenueEntity {
 
-
     @Id
     private Integer id;
     private String name;
     private String address;
     private int asistentEvent;
 
-    public VenueEntity(String name, String address, int asistentEvent) {
-        this.name = name;
-        this.address = address;
-        this.asistentEvent = asistentEvent;
-    }
 }

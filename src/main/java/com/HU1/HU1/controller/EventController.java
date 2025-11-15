@@ -8,48 +8,47 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/events")
 public class EventController {
 
-
     private final EventService service;
-
 
     public EventController(EventService service) {
         this.service = service;
     }
-
 
     @PostMapping
     public ResponseEntity<EventDTO> create(@Valid @RequestBody EventDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto));
     }
 
-
     @GetMapping
-    public ResponseEntity<List<EventDTO>> findAll() {
+    public ResponseEntity<List<EventDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<EventDTO>> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.getById(id));
+    public ResponseEntity<EventDTO> getById(@PathVariable Integer id) {
+        return service.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-
 
     @PutMapping("/{id}")
-    public ResponseEntity<Optional<EventDTO>> update(@PathVariable Integer id, @Valid @RequestBody EventDTO dto) {
-        return ResponseEntity.ok(service.update(id, dto));
-    }
+    public ResponseEntity<EventDTO> update(
+            @PathVariable Integer id,
+            @Valid @RequestBody EventDTO dto) {
 
+        return service.update(id, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+        boolean deleted = service.delete(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

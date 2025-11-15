@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/venues")
 public class VenueController {
+
     private final VenueService service;
 
     public VenueController(VenueService service) {
@@ -25,23 +25,30 @@ public class VenueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VenueDTO>> findAll() {
+    public ResponseEntity<List<VenueDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<VenueDTO>> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.getById(id));
+    public ResponseEntity<VenueDTO> getById(@PathVariable Integer id) {
+        return service.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Optional<VenueDTO>> update(@PathVariable Integer id, @Valid @RequestBody VenueDTO dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+    public ResponseEntity<VenueDTO> update(
+            @PathVariable Integer id,
+            @Valid @RequestBody VenueDTO dto) {
+
+        return service.update(id, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+        boolean deleted = service.delete(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

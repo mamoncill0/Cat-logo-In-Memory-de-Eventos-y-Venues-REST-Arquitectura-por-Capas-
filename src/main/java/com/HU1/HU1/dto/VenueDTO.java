@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class VenueDTO {
 
+    private Integer id;
 
     @NotBlank(message = "Venue name cannot be empty")
     private String name;

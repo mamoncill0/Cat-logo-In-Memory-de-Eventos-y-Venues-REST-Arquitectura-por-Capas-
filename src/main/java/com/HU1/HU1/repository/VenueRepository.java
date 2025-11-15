@@ -10,24 +10,21 @@ import java.util.Optional;
 @Repository
 public class VenueRepository {
 
-
     private final List<VenueEntity> storage = new ArrayList<>();
 
-
-    public List<VenueEntity> findAll() { return storage; }
-
+    public List<VenueEntity> findAll() {
+        return storage;
+    }
 
     public Optional<VenueEntity> findById(Integer id) {
         return storage.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
-
 
     public VenueEntity save(VenueEntity venue) {
         storage.removeIf(e -> e.getId().equals(venue.getId()));
         storage.add(venue);
         return venue;
     }
-
 
     public boolean delete(Integer id) {
         return storage.removeIf(e -> e.getId().equals(id));

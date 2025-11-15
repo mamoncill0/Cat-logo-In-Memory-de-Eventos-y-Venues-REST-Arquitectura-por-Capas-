@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class EventDTO {
 
+    private Integer id;
 
     @NotBlank(message = "Event name cannot be empty")
     private String nameEvent;
